@@ -4,17 +4,17 @@ This project consists of an algorithm which can compute semantic expressions. A 
 
 Examples of semantic expressions:
 ```
-King - man + woman = Queen
+King - man + woman ≈ Queen
 
-Russian - Russia + China = Chineese
+Russian - Russia + China ≈ Chineese
 
-humans + unity = peaceful_coexistence
+humans + unity ≈ peaceful_coexistence
 
-god - human + earth = heavens
+god - human + earth ≈ heavens
 
-slower - slow + fast = faster
+slower - slow + fast ≈ faster
 
-Paris - France + Romania = Bucharest
+Paris - France + Romania ≈ Bucharest
 ```
 
 The algorithm delivers intuitive results based on the meaning of used words and arithmetic operators.
