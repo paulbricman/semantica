@@ -17,7 +17,7 @@ slower - slow + fast ≈ faster
 Paris - France + Romania ≈ Bucharest
 ```
 
-The algorithm delivers intuitive results based on the meaning of used words and arithmetic operators.
+The algorithm delivers intuitive results based on the meaning of the used words and the arithmetic operators.
 
 ## How does it work?
 The algorithm has two main components: the interpretation of the mathematical expression contained in a string, and the transformation of words into computable vectors.
