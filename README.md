@@ -37,6 +37,7 @@ python3 -m pip install gensim
 ## Usage
 ```
 python3 semantica.py
+[*] Model loaded
 human+unity
 ['peaceful_coexistence', 'human_beings', 'humankind', 'oneness', 'mankind']
 ```
