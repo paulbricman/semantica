@@ -24,7 +24,7 @@ The algorithm has two main components: the interpretation of the mathematical ex
 
 The interpretation of the mathematical expression consists of generating an Abstract Syntax Tree from the string and computing its result.
 
-The transformation of words into computable vectors is based on the Word2Vec model, which learns a mapping from a word to its context by generating an intermediary embedding, which is used as its representation in vector space.
+The transformation of words into computable vectors is based on the Word2Vec model, which learns a mapping from a word to its context by generating an intermediate embedding, which is used as its representation in vector space.
 
 Combining the two components we obtain an algorithm which can compute semantic expressions.
 
