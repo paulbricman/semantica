@@ -8,13 +8,13 @@ King - man + woman = Queen
 
 Russian - Russia + China = Chineese
 
+humans + unity = peaceful_coexistence
+
 god - human + earth = heavens
 
 slower - slow + fast = faster
 
 Paris - France + Romania = Bucharest
-
-humans + unity = peaceful_coexistence
 ```
 
 The algorithm delivers intuitive results based on the meaning of used words and arithmetic operators.
