@@ -28,7 +28,7 @@ The transformation of words into computable vectors is based on the Word2Vec mod
 
 Combining the two components we obtain an algorithm which can compute semantic expressions.
 
-[](https://github.com/paubric/python-semantica/blob/master/word2vec2.png)
+![](https://github.com/paubric/python-semantica/blob/master/word2vec2.png)
 
 ## Setup
 ```
