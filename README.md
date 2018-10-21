@@ -20,7 +20,7 @@ Paris - France + Romania ≈ Bucharest
 The algorithm delivers intuitive results based on the meaning of used words and arithmetic operators.
 
 ## How does it work?
-There are two main components of the algorithm: the interpretation of the mathematical expression contained in a string, and the transformation of words into computable vectors.
+The algorithm has two main components: the interpretation of the mathematical expression contained in a string, and the transformation of words into computable vectors.
 
 The interpretation of the mathematical expression consists of generating an Abstract Syntax Tree from the string and computing its result.
 
