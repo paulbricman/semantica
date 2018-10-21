@@ -35,10 +35,14 @@ Combining the two components we obtain an algorithm which can compute semantic e
 python3 -m pip install gensim
 ```
 ## Usage
+Wait for the model to load then enter a semantic expression. 
 ```
 python3 semantica.py
 [*] Model loaded
+```
+The algorithm will print the best results.
+```
 human+unity
 ['peaceful_coexistence', 'human_beings', 'humankind', 'oneness', 'mankind']
 ```
-Wait for the model to load then enter a semantic expression. The algorithm will print the best results.
+
