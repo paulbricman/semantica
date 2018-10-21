@@ -37,5 +37,7 @@ python3 -m pip install gensim
 ## Usage
 ```
 python3 semantica.py
+human+unity
+['peaceful_coexistence', 'human_beings', 'humankind', 'oneness', 'mankind']
 ```
 Wait for the model to load then enter a semantic expression. The algorithm will print the best results.
