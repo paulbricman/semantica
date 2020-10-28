@@ -43,11 +43,22 @@ class Semantica:
 
         return mix
 
-    def shift(self, source, target):
-        source_vector = -self.to_vector(source, norm=True)
-        target_vector = self.to_vector(target, norm=True)
+    def shift(self, source, target, norm=True):
+        source_vector = -self.to_vector(source, norm=norm)
+        target_vector = self.to_vector(target, norm=norm)
 
         shift = matutils.unitvec(
             array([source_vector, target_vector]).mean(axis=0)).astype(float32)
 
         return shift
+
+    def span(self, start, end, steps=5):
+        step_vectors = []
+        shift = self.shift(start, end)
+
+        for step in range(1, steps + 1):
+            step_vector = self.mix([start, shift * (1 / steps) * step])
+            step_vectors += [step_vector]
+
+        return step_vectors
+
