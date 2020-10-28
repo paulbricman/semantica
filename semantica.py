@@ -19,11 +19,18 @@ class Semantica:
             else:
                 return self.c.get_vector(concept)
 
-    def field(self, concept):
-        field = self.c.most_similar([self.to_vector(concept, norm=True)])
-        field = [e[0] for e in field]
+    def field(self, concepts):
+        fields = []
 
-        return field
+        if isinstance(concepts, (str, ndarray)):
+            concepts = [concepts]
+
+        for concept in concepts:
+            field = self.c.most_similar([self.to_vector(concept, norm=True)])
+            field = [e[0] for e in field]
+            fields += [field]
+
+        return fields
 
     def mix(self, concepts):
         concept_vectors = []
