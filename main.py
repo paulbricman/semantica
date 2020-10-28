@@ -1,5 +1,5 @@
 from semantica import Semantica
 
-s = Semantica('./models/GoogleNews-vectors-negative300.bin', word_count=10000)
+s = Semantica('./models/GoogleNews-vectors-negative300.bin', word_count=100000)
 
-print(s.field("tree"))
+print(s.field(["king", s.shift("man", "woman")]))
