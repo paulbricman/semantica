@@ -10,10 +10,20 @@ class Semantica:
         self.c = gensim.models.KeyedVectors.load_word2vec_format(
             model_path, binary=True, limit=word_count)
 
-    def to_vector(self, concept, norm=True):
-        """Turn a key or vector into a vector.
+    def unique(self, sequence):
+        seen = set()
+        return [x for x in sequence if not (x in seen or seen.add(x))]
 
-        If `concept` is a vector, return it. If it's a key, return the associated vector after normalizing it.
+    def to_lower(self, concepts):
+        for i in range(len(concepts)):
+            concepts[i] = concepts[i].lower()
+
+        return self.unique(concepts)
+
+    def to_vector(self, concept, norm=True):
+        """Turn a concept key or concept vector into a concept vector.
+
+        If `concept` is a vector, return it. If it's a key, return the associated vector after optionally normalizing it.
         """
         if isinstance(concept, ndarray):
             return concept
@@ -23,24 +33,20 @@ class Semantica:
             else:
                 return self.c.get_vector(concept)
 
-    def field(self, concepts, norm_concepts=True):
-        """Return semantic fields of given concepts.
+    def field(self, concept, norm_concept=True):
+        """Return the semantic field of a given concept key or vector.
 
-        Extract the most similar concepts for each element of `concepts`, and return them.
+        Extract the concept keys most similar to `concept` after optionally normalizing it, and return them.
         """
-        fields = []
+        field = self.c.most_similar([self.to_vector(concept, norm=norm_concept)], topn=20)
+        field = [e[0] for e in field]
 
-        if isinstance(concepts, (str, ndarray)):
-            concepts = [concepts]
+        lower_unique_results = self.to_lower(field)
+        new_results = [e for e in lower_unique_results if str(e) != str(concept)]
 
-        for concept in concepts:
-            field = self.c.most_similar([self.to_vector(concept, norm=norm_concepts)])
-            field = [e[0] for e in field]
-            fields += [field]
+        return new_results
 
-        return fields
-
-    def mix(self, concepts, norm_concepts=True, norm_result=True):
+    def mix(self, *concepts, shift=None, norm_concepts=True, norm_result=True):
         """Combine the meaning of multiple concepts.
 
         Average the vectors associated with the given concepts and return the normalized result.
@@ -50,14 +56,21 @@ class Semantica:
         for concept in concepts:
             concept_vectors += [self.to_vector(concept, norm=norm_concepts)]
 
+        if shift is not None:
+            concept_vectors += [self.shift(shift[0], shift[1], norm_concepts=False, norm_result=True)]
+
         mix = array(concept_vectors).mean(axis=0).astype(float32)
 
-        if norm_result:
-            mix = matutils.unitvec(mix)
+        results = self.field(mix, norm_concept=norm_result)
+        lower_unique_results = self.to_lower(results)
+        new_results = [e for e in lower_unique_results if e not in concepts]
 
-        return mix
+        if shift is not None:
+            new_results = [e for e in new_results if e not in shift]
 
-    def shift(self, source, target, norm_concepts=False, norm_result=True):
+        return new_results
+
+    def shift(self, source, target, norm_concepts=True, norm_result=True):
         """Return a vector which encodes a meaningful semantic shift.
 
         Compute the difference between a source and target vector, and return the normalized result.
