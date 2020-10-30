@@ -81,7 +81,7 @@ class Semantica:
 
         return results
 
-    def shift(self, source, target, norm_concepts=False, norm_result=True):
+    def shift(self, source, target, norm_concepts=True, norm_result=True):
         """Return a vector which encodes a meaningful semantic shift.
         """
         # Extract concept vectors for source and target concepts
@@ -97,24 +97,27 @@ class Semantica:
 
         return shift
 
-    def span(self, start, end, steps=5, norm_concepts=False, norm_shift_result=False, norm_result=False, norm_mix_concepts=True):
+    def span(self, start, end, steps=5, norm_concepts=False, norm_shift_result=False, norm_result=False, norm_mix_concepts=False):
         """Return an interpolation of the semantic space between two concepts.
-
-        
         """
-        step_keys = []
+        results = []
         shift = self.shift(start, end, norm_concepts=norm_concepts, norm_result=norm_shift_result)
 
+        # Append concept keys most similar to step vectors
         for step in range(1, steps + 1):
             step_key_field = self.mix(*[start, shift * (1 / steps) * step], norm_result=norm_result, norm_concepts=norm_mix_concepts, lower=False)
-            step_keys += [*step_key_field]
+            results += [*step_key_field]
 
-        step_keys = sorted(step_keys, key=lambda x: self.c.rank(x, start)/self.c.rank(x, end))
+        # Remove the query concept keys themselves from the result
+        results = [e for e in results if e not in [start, end]]
 
-        lower_unique_results = self.to_lower(step_keys)
-        new_results = [e for e in lower_unique_results if e != start.lower() and e != end.lower()]
+        # Make concept keys lowercase and unique
+        results = self.lower_unique(results)
 
-        return new_results
+        # Add ends
+        results = [start, *results, end]
+
+        return results
 
     def model(self, model, match_threshold=0.6):
         root = model[0]
