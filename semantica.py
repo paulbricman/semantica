@@ -77,7 +77,7 @@ class Semantica:
             results = self.lower_unique(results)
 
         # Remove the query concept keys themselves from the result
-        results = [e for e in results if e not in concepts]
+        results = [e for e in results if str(e) not in concepts]
 
         return results
 
