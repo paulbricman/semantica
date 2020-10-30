@@ -6,10 +6,10 @@ samples = []
 
 samples += [s.field("tree")]
 samples += [s.mix("breakfast", "lunch", "dinner")]
-samples += [s.mix("king", shift=["man", "woman"])]
-samples += [s.mix("burrito", shift=["Spain", "Italy"])]
-#samples += [s.span("car", "boat")]
-samples += [s.model("king", "queen")]
+samples += [s.mix("king", s.shift("man", "woman"))]
+samples += [s.mix("burrito", s.shift("Spain", "Italy"))]
+#samples += [s.span("citizen", "earth")]
+#samples += [s.model("king", "queen")]
 
 for i in range(len(samples)):
     print('Sample', str(i))

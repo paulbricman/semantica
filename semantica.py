@@ -11,87 +11,87 @@ class Semantica:
             model_path, binary=True, limit=word_count)
 
     def unique(self, sequence):
+        """Turn a list into a set, while preserving element order.
+        """
         seen = set()
         return [x for x in sequence if not (x in seen or seen.add(x))]
 
-    def to_lower(self, concepts):
-        for i in range(len(concepts)):
-            concepts[i] = concepts[i].lower()
+    def lower_unique(self, concept_keys):
+        """Turn a list of strings into a set of lowercase strings.
+        """
+        for i in range(len(concept_keys)):
+            concept_keys[i] = concept_keys[i].lower()
 
-        return self.unique(concepts)
+        return self.unique(concept_keys)
 
-    def to_vector(self, concept, norm=True):
+    def to_vector(self, concept, norm_result=True):
         """Turn a concept key or concept vector into a concept vector.
-
-        If `concept` is a vector, return it. If it's a key, return the associated vector after optionally normalizing it.
         """
+        # Extract concept vector accordingly.
         if isinstance(concept, ndarray):
-            return concept
+            result_vector = concept
+        elif isinstance(concept, str):
+            result_vector = self.c.get_vector(concept)
         else:
-            if norm:
-                return matutils.unitvec(self.c.get_vector(concept))
-            else:
-                return self.c.get_vector(concept)
+            raise ValueError("concept should be of type str or ndarray.")
 
-    def field(self, concept, norm_concept=True, lower=True):
+        # Optionally normalize result  
+        if norm_result:
+            result_vector = matutils.unitvec(result_vector)
+        
+        return result_vector
+
+    def field(self, concept, norm_concept=True, lower=True, max_concept_count=10):
         """Return the semantic field of a given concept key or vector.
-
-        Extract the concept keys most similar to `concept` after optionally normalizing it, and return them.
         """
-        field = self.c.most_similar([self.to_vector(concept, norm=norm_concept)], topn=10)
+        # Extract concept keys most similar to concept
+        field = self.c.most_similar([self.to_vector(concept, norm_result=norm_concept)], topn=max_concept_count)
         field = [e[0] for e in field]
 
+        # Optionally make concept keys lowercase and unique
         if lower:
-            lower_unique_results = self.to_lower(field)
-        else:
-            lower_unique_results = field
+            field = self.lower_unique(field)
 
+        # Remove the query concept key itself from the result
         if isinstance(concept, str):
-            new_results = [e for e in lower_unique_results if str(e) != str(concept)]
-        else:
-            new_results = lower_unique_results
+            field = [e for e in field if str(e) != str(concept)]
 
-        return new_results
+        return field
 
     def mix(self, *concepts, shift=None, norm_concepts=True, norm_result=True, lower=True):
         """Combine the meaning of multiple concepts.
-
-        Average the vectors associated with the given concepts and return the normalized result.
         """
+        # Create list of vectorized concepts
         concept_vectors = []
-
         for concept in concepts:
-            concept_vectors += [self.to_vector(concept, norm=norm_concepts)]
+            concept_vectors += [self.to_vector(concept, norm_result=norm_concepts)]
 
-        if shift is not None:
-            concept_vectors += [self.shift(shift[0], shift[1], norm_concepts=False, norm_result=True)]
-
+        # Compute average of vectorized concepts
         mix = array(concept_vectors).mean(axis=0).astype(float32)
 
+        # Compute semantic field of vector average
         results = self.field(mix, norm_concept=norm_result, lower=lower)
         
+        # Optionally make concept keys lowercase and unique
         if lower:
-            lower_unique_results = self.to_lower(results)
-        else:
-            lower_unique_results = results
+            results = self.lower_unique(results)
 
-        new_results = [e for e in lower_unique_results if e not in concepts]
+        # Remove the query concept keys themselves from the result
+        results = [e for e in results if e not in concepts]
 
-        if shift is not None:
-            new_results = [e for e in new_results if e not in shift]
+        return results
 
-        return new_results
-
-    def shift(self, source, target, norm_concepts=True, norm_result=True):
+    def shift(self, source, target, norm_concepts=False, norm_result=True):
         """Return a vector which encodes a meaningful semantic shift.
-
-        Compute the difference between a source and target vector, and return the normalized result.
         """
-        source_vector = -1 * self.to_vector(source, norm=norm_concepts)
-        target_vector = self.to_vector(target, norm=norm_concepts)
+        # Extract concept vectors for source and target concepts
+        source_vector = self.to_vector(source, norm_result=norm_concepts)
+        target_vector = self.to_vector(target, norm_result=norm_concepts)
 
-        shift = array([source_vector, target_vector]).mean(axis=0).astype(float32)
+        # Compute shift
+        shift = array([-1 * source_vector, target_vector]).mean(axis=0).astype(float32)
 
+        # Optionally normalize result
         if norm_result:
             shift = matutils.unitvec(shift)
 
