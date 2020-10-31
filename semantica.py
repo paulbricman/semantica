@@ -105,21 +105,24 @@ class Semantica:
 
         # Append concept keys most similar to step vectors
         for step in range(1, steps + 1):
-            step_key_field = self.mix(*[start, shift * (1 / steps) * step], norm_result=norm_result, norm_concepts=norm_mix_concepts, lower=False)
+            step_key_field = self.mix(*[start, shift * (1 / (steps + 1)) * step], norm_result=norm_result, norm_concepts=norm_mix_concepts, lower=False)
             results += [*step_key_field]
 
         # Remove the query concept keys themselves from the result
-        results = [e for e in results if e not in [start, end]]
+        results = [e for e in results if e.lower() not in [start.lower(), end.lower()]]
 
         # Make concept keys lowercase and unique
         results = self.lower_unique(results)
+
+        # Sort concept keys by location across conceptual spectrum
+        results = sorted(results, key=lambda x: self.c.similarity(x, end) - self.c.similarity(x, start))
 
         # Add ends
         results = [start, *results, end]
 
         return results
 
-    def model(self, model, match_threshold=0.6):
+    def match(self, model, match_threshold=0.6):
         root = model[0]
         skeleton = [self.shift(root, e, norm_concepts=False, norm_result=False) for e in model[1:]]
         matches = []
