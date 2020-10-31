@@ -24,7 +24,10 @@ samples = []
 #samples += [s.span("human", "computer")]
 #samples += [s.match("king", "queen")]
 #samples += [s.match("tree", "forest")]
-samples += [s.match("king", "queen")]
+#samples += [s.match("king", "queen")]
+samples += [s.unmix("two")]
+#samples += [s.mix("two", s.shift("one", "two"))]
+#samples += [s.mix("one", "three")]
 
 for i in range(len(samples)):
     print('Sample', str(i))
