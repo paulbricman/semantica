@@ -23,7 +23,8 @@ samples = []
 #samples += [s.span("hope", "despair")]
 #samples += [s.span("human", "computer")]
 #samples += [s.match("king", "queen")]
-samples += [s.match("tree", "forest")]
+#samples += [s.match("tree", "forest")]
+samples += [s.match("king", "queen")]
 
 for i in range(len(samples)):
     print('Sample', str(i))

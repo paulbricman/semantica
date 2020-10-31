@@ -130,7 +130,7 @@ class Semantica:
         """
         # Extract conceptual relations from model
         root = model[0]
-        skeleton = [self.shift(root, e, norm_concepts=False, norm_result=False) for e in model[1:]]
+        skeleton = [self.shift(root, e) for e in model[1:]]
 
         for i in range(len(self.c.vectors)):
             match_score = []
@@ -148,7 +148,7 @@ class Semantica:
             # Evaluate match through measure of alignment between relations
             for j in range(len(new_leaf_vectors)):
                 match_score += [dot(self.shift(new_root_concept,
-                                               new_leaf_concepts[j], norm_concepts=False, norm_result=False), skeleton[j])]
+                                               new_leaf_concepts[j]), skeleton[j])]
 
             match_score = mean(match_score)
 
