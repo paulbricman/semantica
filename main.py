@@ -1,5 +1,5 @@
 from semantica import Semantica
-s = Semantica('./models/GoogleNews-vectors-negative300.bin', word_count=1000000)
+s = Semantica('./models/GoogleNews-vectors-negative300.bin', word_count=100000)
 
 samples = []
 
@@ -17,12 +17,13 @@ samples = []
 #for element in itertools.product([True, False], [True, False], [True, False], [True, False]):
 #    samples += [s.mix("love", s.shift("human", "computer", norm_concepts=element[0], norm_result=element[1]), norm_concepts=element[2], norm_result=element[3])]
 #s.mix("humankind", "space")
-samples += [s.span("person", "society")]
+#samples += [s.span("person", "society")]
 #samples += [s.span("house", "city")]
 #samples += [s.span("loser", "winner")]
 #samples += [s.span("hope", "despair")]
 #samples += [s.span("human", "computer")]
-#samples += [s.model("king", "queen")]
+#samples += [s.match("king", "queen")]
+samples += [s.match("tree", "forest")]
 
 for i in range(len(samples)):
     print('Sample', str(i))

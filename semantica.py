@@ -58,7 +58,7 @@ class Semantica:
 
         return field
 
-    def mix(self, *concepts, shift=None, norm_concepts=True, norm_result=True, lower=True):
+    def mix(self, *concepts, shift=None, norm_concepts=True, norm_result=True, lower=True, return_vector=False):
         """Combine the meaning of multiple concepts.
         """
         # Create list of vectorized concepts
@@ -68,6 +68,9 @@ class Semantica:
 
         # Compute average of vectorized concepts
         mix = array(concept_vectors).mean(axis=0).astype(float32)
+
+        if return_vector:
+            return mix
 
         # Compute semantic field of vector average
         results = self.field(mix, norm_concept=norm_result, lower=lower)
@@ -122,42 +125,34 @@ class Semantica:
 
         return results
 
-    def match(self, model, match_threshold=0.6):
+    def match(self, *model):
+        """Find analogies for a given conceptual model.
+        """
+        # Extract conceptual relations from model
         root = model[0]
         skeleton = [self.shift(root, e, norm_concepts=False, norm_result=False) for e in model[1:]]
-        matches = []
 
         for i in range(len(self.c.vectors)):
             match_score = []
             new_leaf_concepts = []
 
+            # Compute concept vectors of analogy
             new_root_vector = self.c.vectors[i]
             new_leaf_vectors = [
-                self.mix(new_root_vector, skeleton[j]) for j in range(len(skeleton))]
+                self.mix(new_root_vector, skeleton[j], return_vector=True) for j in range(len(skeleton))]
 
+            # Compute concept keys of analogy
             new_root_concept = self.c.similar_by_vector(new_root_vector)[0][0]
-            new_leaf_concepts = []
+            new_leaf_concepts = [self.c.similar_by_vector(e)[0][0] for e in new_leaf_vectors]
 
-            for new_leaf_vector in new_leaf_vectors:
-                new_leaf_concept = [e[0] for e in self.c.similar_by_vector(
-                    new_leaf_vector) if e[0] not in [new_root_concept, *new_leaf_concepts]][0]
-                new_leaf_concepts += [new_leaf_concept]
-
-            for i in range(len(new_leaf_vectors)):
+            # Evaluate match through measure of alignment between relations
+            for j in range(len(new_leaf_vectors)):
                 match_score += [dot(self.shift(new_root_concept,
-                                               new_leaf_concepts[i]), skeleton[i])]
-
-            #for i in range(len(new_leaf_vectors)):
-            #    match_score += [dot(matutils.unitvec(new_leaf_vectors[i]),
-            #                        matutils.unitvec(self.to_vector(new_leaf_concepts[i])))]
-
-            # if "man" in [e[0] for e in self.c.similar_by_vector(new_root)]:
-            #    print('---', [e for e in [self.c.similar_by_vector(e) for e in [new_root] + new_leafs]], sep='\n')
+                                               new_leaf_concepts[j], norm_concepts=False, norm_result=False), skeleton[j])]
 
             match_score = mean(match_score)
 
-            if match_score > match_threshold:
+            # Print if there's a match
+            if match_score > 0:
                 match = [new_root_concept, *new_leaf_concepts]
-                #matches += [new_root, *new_leafs]
-                print('---', *self.field(match), sep='\n')
-                print(match_score)
+                print(i, match, match_score)
