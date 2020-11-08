@@ -1,9 +1,9 @@
 from semantica import Semantica
-s = Semantica('./models/GoogleNews-vectors-negative300.bin', word_count=100000)
+s = Semantica()
 
 samples = []
 
-#samples += [s.field("tree")]
+samples += [s.field("tree")]
 #samples += [s.mix("human", "computer")]
 #samples += [s.mix("breakfast", "lunch", "dinner")]
 #samples += [s.mix("king", s.shift("man", "woman"))]
@@ -11,6 +11,17 @@ samples = []
 #s.mix("society", s.shift("order", "chaos"))
 #s.mix("heaven", s.shift("good", "bad")))
 #s.mix("hero", s.shift("good", "bad"))
+#s.mix("people", s.shift("society", "brain"))
+#s.mix("rocks", "science")
+#s.mix("cell", s.shift("biology", "physics"))
+#s.mix("skirt", s.shift("she", "he"))
+#s.mix("arm", s.shift("elbow", "knee"))
+#s.mix("shark", s.shift("sea", "mountain"))
+#s.mix("microscope", s.shift("biology", "astronomy"))
+#s.mix("Germany", s.shift("Hitler", "Mussolini"))
+#s.mix("Christmas", s.shift("Christian", "Jew"))
+#s.mix("sea", s.shift("fish", "bird"))
+#s.mix("bed", s.shift("bedroom", "bathroom"))
 #s.mix("human", "virus")
 #s.mix("computer", "virus")
 #import itertools
@@ -24,8 +35,9 @@ samples = []
 #samples += [s.span("human", "computer")]
 #samples += [s.match("king", "queen")]
 #samples += [s.match("tree", "forest")]
-#samples += [s.match("king", "queen")]
-samples += [s.unmix("two")]
+#s.match("biology", "cells", target="science")
+#s.match("water", "bottle", target="food")
+#samples += [s.unmix("two")]
 #samples += [s.mix("two", s.shift("one", "two"))]
 #samples += [s.mix("one", "three")]
 
