@@ -22,6 +22,7 @@ samples += [s.field("tree")]
 #s.mix("Christmas", s.shift("Christian", "Jew"))
 #s.mix("sea", s.shift("fish", "bird"))
 #s.mix("bed", s.shift("bedroom", "bathroom"))
+#s.mix("saxophone", s.shift("jazz", "rock"))
 #s.mix("human", "virus")
 #s.mix("computer", "virus")
 #import itertools
@@ -33,10 +34,15 @@ samples += [s.field("tree")]
 #samples += [s.span("loser", "winner")]
 #samples += [s.span("hope", "despair")]
 #samples += [s.span("human", "computer")]
+#s.span("kindergarten", "university")
+#s.span("pond", "ocean")
 #samples += [s.match("king", "queen")]
 #samples += [s.match("tree", "forest")]
 #s.match("biology", "cells", target="science")
 #s.match("water", "bottle", target="food")
+#s.match("physics", "Einstein", target="science")
+#s.match("physics", "physicist", target="science")
+#s.match("physics", "Einstein", target="arts")
 #samples += [s.unmix("two")]
 #samples += [s.mix("two", s.shift("one", "two"))]
 #samples += [s.mix("one", "three")]
