@@ -60,7 +60,7 @@ class Semantica:
 
         return field
 
-    def mix(self, *concepts, shift=None, norm_concepts=True, norm_result=True, lower=True, return_vector=False):
+    def mix(self, *concepts, norm_concepts=True, norm_result=True, lower=True, return_vector=False):
         """Combine the meaning of multiple concept keys or vectors.
         """
         # Create list of vectorized concepts
